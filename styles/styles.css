@@ -1,0 +1,343 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f1e3; /* Beige claro */
+    color: #5d4037; /* Café oscuro */
+}
+
+/* Encabezado */
+header {
+    background-color: #795548; /* Marrón */
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Menú */
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    background-color: #6d4c41; /* Café medio */
+}
+
+nav ul li {
+    position: relative;
+    padding: 10px 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+nav ul li:hover {
+    background-color: #4e342e; /* Café más oscuro */
+}
+
+/* Submenú */
+.submenu {
+    display: none;
+    position: absolute;
+    background-color: #6d4c41;
+    list-style: none;
+    left: 0;
+    top: 100%;
+    min-width: 150px;
+}
+
+.dropdown:hover .submenu {
+    display: block;
+}
+
+/* Sección de bienvenida */
+.bienvenida {
+    text-align: center;
+    padding: 40px;
+    background: #d7ccc8; /* Beige cálido */
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    margin: 30px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.bienvenida h2 {
+    color: #4e342e; /* Café más oscuro */
+}
+
+.bienvenida p {
+    font-size: 18px;
+    color: #5d4037;
+}
+
+/* Botón */
+.boton {
+    display: inline-block;
+    background: #795548;
+    color: white;
+    padding: 12px 20px;
+    margin-top: 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.boton:hover {
+    background: #5d4037;
+}
+
+/* Pie de página */
+footer {
+    background-color: #4e342e;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+form {
+    background-color: white;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px #aaa;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#vistaPrevia {
+    width: 120px;
+    height: 120px;
+    border: 2px solid #6d4c41;
+    border-radius: 5px;
+    display: block;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #795548;
+    color: white;
+    padding: 10px;
+    margin-top: 15px;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #5d4037;
+}
+#vistaPrevia {
+    width: 120px;
+    height: 120px;
+    border: 2px solid #6d4c41;
+    border-radius: 5px;
+    display: block;
+    margin-top: 10px;
+}
+
+.notificacion {
+    display: none;
+    background-color: #00796b;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #aaa;
+}
+
+.card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.acciones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.boton {
+    padding: 8px 12px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.editar {
+    background-color: #FFC107;
+    color: black;
+}
+
+.agregar {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background-color: white;
+    padding: 15px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0px 0px 8px #aaa;
+}
+
+.card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.acciones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.boton {
+    padding: 8px 12px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.editar {
+    background-color: #FFC107;
+    color: black;
+}
+
+.ajustar {
+    background-color: #4CAF50;
+    color: white;
+}
+.shopping-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
+}
+
+.left-column, .right-column {
+  width: 50%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+  padding: 10px;
+}
+
+.card {
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0px 0px 8px #aaa;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 0;
+}
+
+.cart-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.cart-item button {
+  background: #d32f2f;
+  color: white;
+  padding: 3px 6px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cart-total {
+  text-align: right;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.notificacion {
+  display: none;
+  background-color: #00796b;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 5px;
+}
+.editar {
+    background-color: #FFC107;
+    color: black;
+}
+
+.ajustar {
+    background-color: #4CAF50;
+    color: white;
+}
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.login-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+}

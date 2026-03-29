@@ -1,5 +1,15 @@
 <?php
+session_start();
 include 'db.php'; // Conexión a la base de datos
+
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['usuario']) || !isset($_SESSION['cargo'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$nombre_usuario = $_SESSION['nombre'];
+$cargo_usuario = $_SESSION['cargo']; // Cargo del usuario
 
 if (isset($_GET['id'])) {
     $id_insumo = $_GET['id'];
@@ -40,14 +50,13 @@ if (isset($_GET['id'])) {
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">Inicio</a></li>
-                <li><a href="insumos.html">Insumos</a></li>
-            </ul>
-        </nav>
-    </header>
+   <header>
+    <!-- Incluir el menú desde menu.php -->
+    <?php include 'menu.php'; ?>
+    
+    <h1>Crear Producto</h1>
+    <p>Bienvenido, <strong><?= htmlspecialchars($nombre_usuario) ?></strong> (<?= htmlspecialchars($cargo_usuario) ?>)</p>
+  </header>
 
     <main>
         <section class="contenedor">

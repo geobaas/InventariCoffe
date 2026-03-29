@@ -72,7 +72,7 @@
         // Mostrar productos en la tabla
         function mostrarProductos() {
             const productosList = document.getElementById("productosList");
-            productosList.innerHTML = ""; // Limpiar el listado antes de llenarlo
+            productosList.innerHTML = ""; // Limpiar la lista
             productos.forEach(producto => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -101,7 +101,6 @@
                     precio_total: producto.precio
                 });
             }
-
             actualizarCarrito();
         }
 
@@ -139,17 +138,17 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(carrito)
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("✅ Venta procesada correctamente.");
-                        carrito = [];
-                        actualizarCarrito();
-                    } else {
-                        alert("❌ Error al procesar la venta.");
-                    }
-                })
-                .catch(error => console.error("Error al procesar venta:", error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("✅ Venta procesada correctamente. ID de Venta: " + data.venta_id);
+                    carrito = [];
+                    actualizarCarrito();
+                } else {
+                    alert("❌ Error al procesar la venta: " + data.message);
+                }
+            })
+            .catch(error => console.error("Error al procesar venta:", error));
         }
     </script>
 </body>

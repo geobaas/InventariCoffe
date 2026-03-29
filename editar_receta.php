@@ -1,6 +1,15 @@
 <?php
+session_start();
 include 'db.php'; // Conexión a la base de datos
 
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['usuario']) || !isset($_SESSION['cargo'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$nombre_usuario = $_SESSION['nombre'];
+$cargo_usuario = $_SESSION['cargo']; // Cargo del usuario
 // Obtener el ID del producto desde la URL usando "producto_id"
 $producto_id = isset($_GET["producto_id"]) ? intval($_GET["producto_id"]) : null;
 if (!$producto_id) {
@@ -59,6 +68,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <title>Editar Producto</title>
+    <link rel="stylesheet" href="styles/styles.css">
     <style>
         .contenedor {
             display: flex;
@@ -100,8 +110,14 @@ $conn->close();
     </style>
 </head>
 <body>
-
-<h2 style="text-align: center;">Editar Producto</h2>
+ <header>
+    <!-- Incluir el menú desde menu.php -->
+    <?php include 'menu.php'; ?>
+    
+    <h1>Editar Producto</h1>
+    <p>Bienvenido, <strong><?= htmlspecialchars($nombre_usuario) ?></strong> (<?= htmlspecialchars($cargo_usuario) ?>)</p>
+  </header>
+<h2 style="text-align: center;"></h2>
 
 <div class="contenedor">
     <!-- Mostrar el nombre del producto -->

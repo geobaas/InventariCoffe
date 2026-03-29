@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Las Abuelitas</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <style>
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        form {
+            flex: 1;
+        }
+
+        .login-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Inicio de Sesión</h1>
+    </header>
+
+    <main>
+        <section class="bienvenida">
+            <h2>Bienvenido</h2>
+            <p>Ingrese sus credenciales para acceder al sistema.</p>
+        </section>
+
+        <div class="login-container">
+            <!-- Formulario de acceso -->
+            <form action="login.php" method="POST">
+                <label for="usuario">Usuario:</label>
+                <input type="text" id="usuario" name="usuario" required>
+
+                <label for="contraseña">Contraseña:</label>
+                <input type="password" id="contraseña" name="contraseña" required>
+                <button type="button" onclick="togglePassword()">👁 Ver</button>
+
+                <button type="submit">Iniciar Sesión</button>
+
+                <p class="error-message">
+                    <?php if (isset($_GET['error'])) echo htmlspecialchars($_GET['error']); ?>
+                </p>
+            </form>
+
+            <!-- Imagen dentro del contenido del login -->
+            <img src="img/Loguin.png" alt="Login" class="login-image">
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Las Abuelitas - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+    function togglePassword() {
+        var input = document.getElementById("contraseña");
+        input.type = (input.type === "password") ? "text" : "password";
+    }
+    </script>
+</body>
+</html>

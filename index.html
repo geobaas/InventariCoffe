@@ -5,35 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventario - Las Abuelitas</title>
     <link rel="stylesheet" href="styles/styles.css">
+    <style>
+        /* Estilos para los cuadros */
+        .contenedor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+        .cuadro {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .boton {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .boton:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Inventario - Las Abuelitas</h1>
-        <nav>
-            <ul>
-                <li><a href="index.php">Inicio</a></li>
-                <li class="dropdown">
-                    <a href="#">Inventario</a>
-                    <ul class="submenu">
-                        <li><a href="insumos.html">Insumos</a></li>
-                        <li><a href="crear_producto.html">Productos</a></li>
-                        <li><a href="listar_insumos.html">Listar Insumos</a></li>
-                        <li><a href="productos.html">Listar Productos</a></li>
-                    </ul>
-                </li>
-                <li><a href="ver_carrito.php">Ventas</a></li>
-                <li><a href="#">Reportes</a></li>
-                <li><a href="#">Ajustes</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
-        <section class="bienvenida">
+    <main class="contenedor">
+        <!-- Bienvenida -->
+        <div class="cuadro">
             <h2>Bienvenido al Sistema de Inventario</h2>
             <p>Gestiona tus insumos y productos de manera fácil y eficiente.</p>
-            <a href="listar_insumos.php" class="boton">Ver Inventario</a>
-        </section>
+            <a href="login.html" class="boton">Vamos a iniciar</a>
+        </div>
+
+        <!-- Misión y visión del software -->
+        <div class="cuadro">
+            <h2>Misión del Software</h2>
+            <p>Facilitar la gestión del inventario en la cafetería, proporcionando una herramienta digital intuitiva y eficiente que optimiza el control de productos e insumos.</p>
+            <h2>Visión del Software</h2>
+            <p>Ser una solución confiable y escalable para la gestión de inventario, permitiendo mejorar la productividad y asegurar una administración más precisa y organizada.</p>
+        </div>
+
+        <!-- Misión y visión de la empresa -->
+        <div class="cuadro">
+            <h2>Misión de Las Abuelitas</h2>
+            <p>Brindar a nuestros clientes productos de alta calidad con el sabor y calidez que los caracteriza, asegurando una experiencia única en cada visita.</p>
+            <h2>Visión de Las Abuelitas</h2>
+            <p>Convertirnos en la cafetería preferida por nuestros clientes, destacándonos por nuestra excelencia en servicio y la frescura de nuestros productos.</p>
+        </div>
+
+        <!-- Comentario inspirador -->
+        <div class="cuadro">
+            <h2>¡Inspírate a dar lo mejor!</h2>
+            <p>El éxito no se logra con suerte, sino con esfuerzo y dedicación. Trabaja con pasión, mejora cada día y haz que cada tarea cuente. Lo que hagas hoy definirá tu futuro. ¡Ve por ello!</p>
+        </div>
     </main>
 
     <footer>
