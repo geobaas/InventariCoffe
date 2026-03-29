@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Bases y Mesclas</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <style>
+        .contenedor {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 90%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        td button {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        td button:hover {
+            background-color: #0056b3;
+        }
+        section {
+            flex: 1;
+            padding: 10px;
+        }
+        header, footer {
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú de navegación -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="crear_base.html">Crear Base</a></li>
+                <li><a href="crear_mescla.html">Crear Mescla</a></li>
+                <li><a href="inventario.html">Inventario</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="contenedor">
+        <!-- Listado de Bases -->
+        <section>
+            <h2>Listado de Bases</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Existencias</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="listadoBases">
+                    <!-- Bases cargadas dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Listado de Mesclas -->
+        <section>
+            <h2>Listado de Mesclas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Existencias</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="listadoMesclas">
+                    <!-- Mesclas cargadas dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Las Abuelitas - Sistema de Gestión</p>
+    </footer>
+
+    <script>
+        // Cargar bases y mesclas desde el servidor
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("listar_bases.php")
+                .then(response => response.json())
+                .then(data => {
+                    mostrarListadoBases(data);
+                })
+                .catch(error => console.error("Error al cargar las bases:", error));
+
+            fetch("listar_mesclas.php")
+                .then(response => response.json())
+                .then(data => {
+                    mostrarListadoMesclas(data);
+                })
+                .catch(error => console.error("Error al cargar las mesclas:", error));
+        });
+
+        // Mostrar el listado de bases
+        function mostrarListadoBases(bases) {
+            const listado = document.getElementById("listadoBases");
+            listado.innerHTML = "";
+
+            bases.forEach(base => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${base.nombre}</td>
+                    <td>${base.exis_base.toFixed(2)} unidades</td>
+                    <td><button onclick="agregarBase(${base.id_base})">Agregar</button></td>
+                `;
+                listado.appendChild(row);
+            });
+        }
+
+        // Mostrar el listado de mesclas
+        function mostrarListadoMesclas(mesclas) {
+            const listado = document.getElementById("listadoMesclas");
+            listado.innerHTML = "";
+
+            mesclas.forEach(mescla => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${mescla.nombre}</td>
+                    <td>${mescla.exis_mescla.toFixed(2)} unidades</td>
+                    <td><button onclick="agregarMescla(${mescla.id_mescla})">Agregar</button></td>
+                `;
+                listado.appendChild(row);
+            });
+        }
+
+        // Acción para agregar más existencias a una base
+        function agregarBase(id_base) {
+            alert(`Función para agregar existencias a la base con ID ${id_base}`);
+        }
+
+        // Acción para agregar más existencias a una mescla
+        function agregarMescla(id_mescla) {
+            alert(`Función para agregar existencias a la mescla con ID ${id_mescla}`);
+        }
+    </script>
+</body>
+</html>

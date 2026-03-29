@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Insumos del Producto</title>
+    <style>
+        .contenedor {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        .cuadro {
+            width: 250px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            background: #f7f1e3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+        <div class="cuadro">
+            <h3>Nombres de Insumos</h3>
+            <?php include 'datos_insumos.php'; ?>
+            <ul>
+                <?php foreach ($nombres as $nombre) { ?>
+                    <li><?php echo $nombre; ?></li>
+                <?php } ?>
+            </ul>
+        </div>
+
+        <div class="cuadro">
+            <h3>Cantidades</h3>
+            <ul>
+                <?php foreach ($cantidades as $cantidad) { ?>
+                    <li><?php echo $cantidad; ?></li>
+                <?php } ?>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>

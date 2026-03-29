@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Mesclas - Las Abuelitas</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        function mostrarNotificacion(tipo, mensaje) {
+            const notificacion = document.createElement("div");
+            notificacion.className = `notificacion ${tipo}`;
+            notificacion.textContent = mensaje;
+            document.body.appendChild(notificacion);
+
+            // Ocultar notificación automáticamente después de 3 segundos
+            setTimeout(() => {
+                notificacion.remove();
+            }, 3000);
+        }
+
+        function actualizarExistencias(id_mescla, rendimiento) {
+            const cantidad_pack = prompt("Ingrese la cantidad de packs a agregar:");
+            if (cantidad_pack && !isNaN(cantidad_pack)) {
+                fetch("actualizar_mescla.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        id_mescla: id_mescla,
+                        rendimiento: rendimiento,
+                        cantidad_pack: parseFloat(cantidad_pack),
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            mostrarNotificacion("exito", data.message);
+                            cargarListado(); // Recargar el listado automáticamente
+                        } else {
+                            mostrarNotificacion("error", data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error al actualizar las existencias:", error);
+                        mostrarNotificacion("error", "Error al actualizar las existencias.");
+                    });
+            } else {
+                mostrarNotificacion("error", "Cantidad inválida. Inténtelo nuevamente.");
+            }
+        }
+
+        function cargarListado() {
+            fetch("listar_mesclas.php")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error al cargar mesclas. Estado: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById("mesclasContainer").innerHTML = data;
+                    mostrarNotificacion("exito", "Mesclas cargadas correctamente.");
+                })
+                .catch(error => {
+                    console.error("Error cargando las mesclas:", error);
+                    mostrarNotificacion("error", "Error al cargar el listado de mesclas.");
+                });
+        }
+
+        document.addEventListener("DOMContentLoaded", cargarListado);
+    </script>
+    <style>
+        .notificacion {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            z-index: 1000;
+        }
+        .notificacion.exito {
+            background-color: #4CAF50; /* Verde éxito */
+        }
+        .notificacion.error {
+            background-color: #F44336; /* Rojo error */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="inventario.html">Inventario</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contenedor">
+            <h2>Listado de Mesclas</h2>
+            <div id="mesclasContainer" class="grid">
+                <!-- Aquí se cargará dinámicamente el contenido de listar_mesclas.php -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Las Abuelitas - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>

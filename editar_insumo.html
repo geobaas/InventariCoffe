@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Insumo</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="inventario.html">Inventario</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contenedor">
+            <h2>Editar Insumo</h2>
+            <form action="procesar_editar_insumo.php" method="POST">
+                <input type="hidden" name="id_insumo" value="<?php echo $_GET['id']; ?>">
+                <label for="nombre_insumo">Nombre del insumo:</label>
+                <input type="text" id="nombre_insumo" name="nombre_insumo" value="<?php echo htmlspecialchars($_GET['nombre']); ?>" required>
+
+                <label for="cantidad_existencias">Cantidad de existencias:</label>
+                <input type="number" id="cantidad_existencias" name="cantidad_existencias" step="0.001" value="<?php echo number_format($_GET['cantidad'], 3); ?>" required>
+
+                <label for="imagen_insumo">URL de la imagen:</label>
+                <input type="text" id="imagen_insumo" name="imagen_insumo" value="<?php echo htmlspecialchars($_GET['imagen']); ?>">
+
+                <div class="acciones">
+                    <button type="submit" name="accion" value="guardar">Guardar Cambios</button>
+                    <button type="submit" name="accion" value="eliminar" class="eliminar">Eliminar Insumo</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Las Abuelitas - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>

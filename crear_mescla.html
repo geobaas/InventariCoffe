@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Mescla</title>
+    <link rel="stylesheet" href="styles/styles.css"> <!-- Archivo de estilos -->
+    <style>
+        .contenedor {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: 90%;
+        }
+        section {
+            flex: 1;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: left;
+            padding: 8px;
+        }
+        td button {
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        td button:hover {
+            background-color: #0056b3;
+        }
+        header, footer {
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú de navegación -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="crear_mescla.html">Crear Mescla</a></li>
+                <li><a href="inventario.html">Inventario</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="contenedor">
+        <!-- Sección del formulario -->
+        <section>
+            <h2>Crear Nueva Mescla</h2>
+            <form id="crearMesclaForm" method="POST" action="crear_mescla.php">
+                <label for="nombre_mescla">Nombre de la mescla:</label>
+                <input type="text" id="nombre_mescla" name="nombre_mescla" placeholder="Ej. Mescla para panqueques" required>
+
+                <h3>Insumos Seleccionados</h3>
+                <div id="insumosSeleccionados" class="insumos-container">
+                    <!-- Insumos seleccionados aparecerán aquí dinámicamente -->
+                </div>
+
+                <label for="rendimiento">Rendimiento esperado (porciones):</label>
+                <input type="number" id="rendimiento" name="rendimiento" step="0.01" placeholder="Ej. 50" required>
+
+                <button type="submit">Crear Mescla</button>
+            </form>
+        </section>
+
+        <!-- Sección del listado de insumos -->
+        <section>
+            <h2>Listado de Insumos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="listadoInsumos">
+                    <!-- Insumos cargados dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Las Abuelitas - Sistema de Gestión</p>
+    </footer>
+
+    <script>
+        let insumos = [];
+        let seleccionados = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("listar_insumos_mescla.php")
+                .then(response => response.json())
+                .then(data => {
+                    insumos = data;
+                    mostrarListadoInsumos();
+                })
+                .catch(error => console.error("Error al cargar los insumos:", error));
+        });
+
+        function mostrarListadoInsumos() {
+            const listado = document.getElementById("listadoInsumos");
+            listado.innerHTML = "";
+
+            insumos.forEach(insumo => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${insumo.nombre}</td>
+                    <td><button type="button" onclick="seleccionarInsumo(${insumo.id_insumo}, '${insumo.nombre}')">Agregar</button></td>
+                `;
+                listado.appendChild(row);
+            });
+        }
+
+        function seleccionarInsumo(id, nombre) {
+            if (!seleccionados.some(insumo => insumo.id === id)) {
+                seleccionados.push({ id, nombre });
+                actualizarInsumosSeleccionados();
+            }
+        }
+
+        function actualizarInsumosSeleccionados() {
+            const contenedor = document.getElementById("insumosSeleccionados");
+            contenedor.innerHTML = "";
+
+            seleccionados.forEach(insumo => {
+                const div = document.createElement("div");
+                div.innerHTML = `
+                    <label>${insumo.nombre}</label>
+                    <input type="hidden" name="insumos_seleccionados[]" value="${insumo.id}">
+                    <input type="number" name="insumo_cantidad[]" placeholder="Cantidad en miligramos/mililitros" required>
+                `;
+                contenedor.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>

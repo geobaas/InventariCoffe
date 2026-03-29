@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Producto</title>
+  <!-- Se conserva tu hoja de estilos externa -->
+  <link rel="stylesheet" href="styles/styles.css">
+  <style>
+    /* Reglas adicionales para la disposición de paneles lado a lado */
+    .contenedor-lado-a-lado {
+      display: flex;
+      gap: 20px;
+      max-width: 1200px;
+      margin: 20px auto;
+    }
+    .panel-insumos {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px #aaa;
+      flex: 0 0 40%;
+    }
+    .panel-formulario {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px #aaa;
+      flex: 0 0 60%;
+    }
+    .seccion {
+      margin-bottom: 20px;
+    }
+    .seccion h2, .seccion h3 {
+      margin: 0 0 10px;
+    }
+    /* Estilo para el mensaje de notificación (ya lo tienes definido en tu CSS, se muestra aquí por claridad) */
+    .notificacion {
+      display: none;
+      background-color: #00796b;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 5px;
+    }
+  </style>
+  <script>
+    // Función para mostrar la vista previa de la imagen
+    function mostrarVistaPrevia(event) {
+      const vistaPrevia = document.getElementById("vistaPrevia");
+      vistaPrevia.src = URL.createObjectURL(event.target.files[0]);
+      vistaPrevia.style.display = "block";
+    }
+    
+    // Cargar el listado de insumos desde cargar_insumos.php
+    document.addEventListener("DOMContentLoaded", function(){
+      fetch("cargar_insumos.php")
+        .then(response => response.json())
+        .then(insumos => {
+          const tbody = document.querySelector("#listadoInsumos tbody");
+          insumos.forEach(insumo => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = `<td>${insumo.nombre}</td>
+                              <td>${insumo.cantidad_existencias} ${insumo.tipo}</td>
+                              <td>$${insumo.precio_unitario}</td>
+                              <td>
+                                <button type="button" onclick="agregarInsumo(${insumo.id_insumo}, '${insumo.nombre}', '${insumo.tipo}', ${insumo.cantidad_existencias}, ${insumo.precio_unitario})">
+                                  Agregar
+                                </button>
+                              </td>`;
+            tbody.appendChild(fila);
+          });
+        })
+        .catch(error => console.error("Error al cargar insumos:", error));
+      
+      document.getElementById("precio").addEventListener("input", actualizarCostos);
+      
+      // Agrega el listener para el envío del formulario vía Ajax
+      document.getElementById("productoForm").addEventListener("submit", async function(e) {
+        e.preventDefault(); // Evita la recarga de página
+        const form = this;
+        const formData = new FormData(form);
+        try {
+          const response = await fetch(form.action, {  
+            method: form.method,
+            body: formData
+          });
+          const result = await response.text();
+          // Muestra el mensaje de notificación y limpia el formulario
+          const notificacion = document.getElementById("notificacion");
+          notificacion.textContent = result; // Se espera que el PHP retorne un mensaje de éxito
+          notificacion.style.display = "block";
+          form.reset();
+          // Opcional: ocultar el mensaje después de 3 segundos
+          setTimeout(() => {
+            notificacion.style.display = "none";
+          }, 3000);
+        } catch (error) {
+          console.error("Error al enviar el formulario: ", error);
+        }
+      });
+    });
+    
+    // Función para agregar insumos al área "Insumos Seleccionados" en el formulario
+    function agregarInsumo(id, nombre, tipo, cantidadDisponible, precioUnitario) {
+      const inputValor = prompt(`Ingrese la cantidad para "${nombre}" (${tipo}) - Disponible: ${cantidadDisponible} ${tipo}`);
+      if (inputValor && !isNaN(inputValor) && parseFloat(inputValor) > 0 && parseFloat(inputValor) <= cantidadDisponible) {
+        let cantidadFinal = parseFloat(inputValor);
+        if (tipo === "Kilogramos" || tipo === "Litros") {
+          cantidadFinal = (cantidadFinal / 1000).toFixed(3);
+        }
+        const costo = (cantidadFinal * precioUnitario).toFixed(2);
+        const tabla = document.querySelector("#insumosSeleccionados tbody");
+        const fila = document.createElement("tr");
+        fila.innerHTML = `<td>${nombre}</td>
+                          <td>${cantidadFinal}</td>
+                          <td>${tipo}</td>
+                          <td>$${costo}</td>
+                          <td>
+                            <button type="button" onclick="eliminarInsumo(this)">Eliminar</button>
+                          </td>
+                          <input type="hidden" name="insumos[]" value='{"id":${id}, "cantidad":${cantidadFinal}, "costo":${costo}, "tipo":"${tipo}"}'>`;
+        tabla.appendChild(fila);
+        actualizarCostos();
+      } else {
+        alert("Cantidad inválida o excede la disponibilidad.");
+      }
+    }
+    
+    // Función para eliminar un insumo de "Insumos Seleccionados"
+    function eliminarInsumo(boton) {
+      boton.parentElement.parentElement.remove();
+      actualizarCostos();
+    }
+    
+    // Función para actualizar los totales (costo total y ganancia)
+    function actualizarCostos() {
+      let costoTotal = 0;
+      document.querySelectorAll("#insumosSeleccionados tbody tr").forEach(fila => {
+        const costoTexto = fila.querySelector("td:nth-child(4)").textContent.replace("$", "");
+        const costo = parseFloat(costoTexto);
+        if (!isNaN(costo)) {
+          costoTotal += costo;
+        }
+      });
+      document.getElementById("costoTotal").textContent = `Costo Total del Producto: $${costoTotal.toFixed(2)}`;
+      const precioVenta = parseFloat(document.getElementById("precio").value);
+      if (!isNaN(precioVenta)) {
+        const gananciaTotal = (precioVenta - costoTotal).toFixed(2);
+        document.getElementById("gananciaTotal").textContent = `Ganancia Total: $${gananciaTotal}`;
+      } else {
+        document.getElementById("gananciaTotal").textContent = `Ganancia Total: $0.00`;
+      }
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="inventario.html">Inventario</a></li>
+      </ul>
+    </nav>
+    <h1>Crear Producto</h1>
+  </header>
+  
+  <!-- Paneles lado a lado -->
+  <div class="contenedor-lado-a-lado">
+    <!-- Panel izquierdo: Listado de Insumos -->
+    <div class="panel-insumos">
+      <h3>Listado de Insumos</h3>
+      <table id="listadoInsumos">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Disponible</th>
+            <th>Precio Unitario</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Se llenará dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Panel derecho: Formulario para crear Producto -->
+    <div class="panel-formulario">
+      <!-- Elemento para mostrar mensajes (notificación) -->
+      <div id="notificacion" class="notificacion"></div>
+      <form id="productoForm" action="procesar_producto.php" method="POST" enctype="multipart/form-data">
+        <div class="seccion">
+          <h2>Datos del Producto</h2>
+          <label for="nombre_producto">Nombre del producto:</label>
+          <input type="text" id="nombre_producto" name="nombre_producto" required>
+          
+          <label for="descripcion">Descripción:</label>
+          <textarea id="descripcion" name="descripcion" required></textarea>
+        </div>
+        
+        <div class="seccion">
+          <h3>Insumos Seleccionados</h3>
+          <table id="insumosSeleccionados">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Tipo</th>
+                <th>Costo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Los insumos seleccionados se agregarán aquí -->
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="seccion">
+          <label for="precio">Precio de venta ($):</label>
+          <input type="number" id="precio" name="precio" step="0.01" required>
+          <p id="costoTotal">Costo Total del Producto: $0.00</p>
+          <p id="gananciaTotal">Ganancia Total: $0.00</p>
+        </div>
+        
+        <div class="seccion">
+          <label for="imagen_producto">Imagen del producto:</label>
+          <input type="file" id="imagen_producto" name="imagen_producto" accept="image/*" onchange="mostrarVistaPrevia(event)" required>
+          <img id="vistaPrevia" style="display:none; width:120px; height:120px; border:2px solid #6d4c41; border-radius:5px; margin-top:10px;" alt="Vista previa">
+        </div>
+        
+        <button type="submit">Crear Producto</button>
+      </form>
+    </div>
+  </div>
+  
+  <footer>
+    <p>&copy; 2025 Las Abuelitas - Todos los derechos reservados.</p>
+  </footer>
+</body>
+</html>

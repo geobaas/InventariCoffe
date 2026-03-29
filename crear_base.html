@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Nueva Base</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script>
+        function agregarInsumo(id, nombre, disponible) {
+            const cantidad = prompt(`Ingrese la cantidad para "${nombre}" (Disponible: ${disponible}):`);
+            if (cantidad && !isNaN(cantidad) && parseFloat(cantidad) > 0 && parseFloat(cantidad) <= disponible) {
+                const listadoSeleccionados = document.getElementById("insumosSeleccionados");
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${nombre}</td>
+                    <td>${cantidad}</td>
+                    <td><button onclick="eliminarInsumo(this)">Eliminar</button></td>
+                    <input type="hidden" name="insumos[]" value='{"id": ${id}, "cantidad": ${cantidad}}'>
+                `;
+                listadoSeleccionados.appendChild(fila);
+                calcularRendimiento();
+            } else {
+                alert("Cantidad inválida o supera lo disponible.");
+            }
+        }
+
+        function eliminarInsumo(boton) {
+            const fila = boton.parentElement.parentElement;
+            fila.remove();
+            calcularRendimiento();
+        }
+
+        function calcularRendimiento() {
+            const division = parseFloat(document.getElementById("division").value);
+            const filasInsumos = document.querySelectorAll("#insumosSeleccionados tr");
+            let sumaTotal = 0;
+
+            filasInsumos.forEach(fila => {
+                const cantidad = parseFloat(fila.querySelector("td:nth-child(2)").textContent);
+                if (!isNaN(cantidad)) {
+                    sumaTotal += cantidad;
+                }
+            });
+
+            if (!isNaN(sumaTotal) && !isNaN(division) && division > 0) {
+                const rendimiento = (sumaTotal / division).toFixed(3);
+                document.getElementById("rendimientoCalculado").textContent = `Rendimiento: ${rendimiento} porciones`;
+            } else {
+                document.getElementById("rendimientoCalculado").textContent = "Rendimiento: N/A";
+            }
+        }
+
+        document.getElementById("division").addEventListener("input", calcularRendimiento);
+    </script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="inventario.html">Inventario</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contenedor" style="display: flex; justify-content: space-between;">
+            <div style="width: 45%;">
+                <h2>Crear Nueva Base</h2>
+                <form action="crear_base.php" method="POST">
+                    <label for="nombre">Nombre de la base:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+
+                    <label for="division">División por porción (Ejemplo: gramos, mililitros):</label>
+                    <input type="number" id="division" name="division" step="0.001" required>
+
+                    <p id="rendimientoCalculado">Rendimiento: N/A</p>
+
+                    <h3>Insumos Seleccionados:</h3>
+                    <table id="insumosSeleccionados">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+
+                    <button type="submit">Crear Base</button>
+                </form>
+            </div>
+
+            <div style="width: 45%;">
+                <h2>Listado de Insumos</h2>
+                <table id="listadoInsumos">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Disponible</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Huevos</td>
+                            <td>640 unidades</td>
+                            <td><button onclick="agregarInsumo(1, 'Huevos', 640)">Agregar</button></td>
+                        </tr>
+                        <tr>
+                            <td>Harina</td>
+                            <td>650.000 kg</td>
+                            <td><button onclick="agregarInsumo(2, 'Harina', 650.000)">Agregar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Las Abuelitas - Todos los derechos reservados</p>
+    </footer>
+</body>
+</html>

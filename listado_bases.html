@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bases - Las Abuelitas</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="inventario.html">Inventario</a></li>
+                <li><a href="ventas.html">Ventas</a></li>
+                <li><a href="reportes.html">Reportes</a></li>
+                <li><a href="ajustes.html">Ajustes</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contenedor">
+            <h2>Listado de Bases</h2>
+            <div id="basesContainer" class="grid">
+                <!-- Aquí se cargará dinámicamente el contenido de listar_bases.php -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Las Abuelitas - Todos los derechos reservados</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Ajustar la ruta para cargar bases
+            fetch("listar_bases.php")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error HTTP! Estado: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    // Insertar los datos en el contenedor de bases
+                    document.getElementById("basesContainer").innerHTML = data;
+                })
+                .catch(error => {
+                    console.error("Error cargando las bases:", error);
+                    document.getElementById("basesContainer").innerHTML = "<p>Error al cargar el listado de bases.</p>";
+                });
+        });
+    </script>
+</body>
+</html>
+

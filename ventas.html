@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas - Carrito de Compras</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Ventas</h1>
+    </header>
+
+    <main>
+        <!-- Sección del listado de productos -->
+        <section id="productos">
+            <h2>Listado de Productos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="productosList">
+                    <!-- Productos cargados dinámicamente -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Sección del carrito de compras -->
+        <section id="carrito">
+            <h2>Carrito de Compras</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Total</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="carritoList">
+                    <!-- Carrito cargado dinámicamente -->
+                </tbody>
+            </table>
+            <h3>Total: $<span id="total">0.00</span></h3>
+            <button id="btnPagar" onclick="procesarVenta()">Pagar</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Las Abuelitas - Sistema de Gestión</p>
+    </footer>
+
+    <script>
+        let productos = [];
+        let carrito = [];
+
+        // Cargar productos desde la base de datos
+        document.addEventListener("DOMContentLoaded", () => {
+            fetch("listar_productos.php")
+                .then(response => response.json())
+                .then(data => {
+                    productos = data;
+                    mostrarProductos();
+                })
+                .catch(error => console.error("Error al cargar productos:", error));
+        });
+
+        // Mostrar productos en la tabla
+        function mostrarProductos() {
+            const productosList = document.getElementById("productosList");
+            productosList.innerHTML = ""; // Limpiar el listado antes de llenarlo
+            productos.forEach(producto => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${producto.nombre}</td>
+                    <td>$${producto.precio.toFixed(2)}</td>
+                    <td><button onclick="agregarAlCarrito(${producto.id_producto})">Subir al Carrito</button></td>
+                `;
+                productosList.appendChild(row);
+            });
+        }
+
+        // Agregar productos al carrito
+        function agregarAlCarrito(id_producto) {
+            const producto = productos.find(p => p.id_producto === id_producto);
+            const itemCarrito = carrito.find(item => item.id_producto === id_producto);
+
+            if (itemCarrito) {
+                itemCarrito.cantidad++;
+                itemCarrito.precio_total += producto.precio;
+            } else {
+                carrito.push({
+                    id_producto: producto.id_producto,
+                    nombre: producto.nombre,
+                    cantidad: 1,
+                    precio_unitario: producto.precio,
+                    precio_total: producto.precio
+                });
+            }
+
+            actualizarCarrito();
+        }
+
+        // Actualizar el carrito
+        function actualizarCarrito() {
+            const carritoList = document.getElementById("carritoList");
+            carritoList.innerHTML = "";
+            let total = 0;
+
+            carrito.forEach(item => {
+                total += item.precio_total;
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.nombre}</td>
+                    <td>${item.cantidad}</td>
+                    <td>$${item.precio_total.toFixed(2)}</td>
+                    <td><button onclick="eliminarDelCarrito(${item.id_producto})">Eliminar</button></td>
+                `;
+                carritoList.appendChild(row);
+            });
+
+            document.getElementById("total").textContent = total.toFixed(2);
+        }
+
+        // Eliminar producto del carrito
+        function eliminarDelCarrito(id_producto) {
+            carrito = carrito.filter(item => item.id_producto !== id_producto);
+            actualizarCarrito();
+        }
+
+        // Procesar venta
+        function procesarVenta() {
+            fetch("procesar_venta.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(carrito)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("✅ Venta procesada correctamente.");
+                        carrito = [];
+                        actualizarCarrito();
+                    } else {
+                        alert("❌ Error al procesar la venta.");
+                    }
+                })
+                .catch(error => console.error("Error al procesar venta:", error));
+        }
+    </script>
+</body>
+</html>
