@@ -1,0 +1,2 @@
+# Ignorar el archivo con las credenciales reales
+config/.env
