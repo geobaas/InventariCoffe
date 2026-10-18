@@ -4,20 +4,20 @@ function cargarEnv($ruta) {
     if (!file_exists($ruta)) {
         return false;
     }
-    
+
     $lineas = file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lineas as $linea) {
         // Ignorar los comentarios
         if (strpos(trim($linea), '#') === 0) continue;
-        
+
         // Separar el nombre de la variable y su valor
         list($nombre, $valor) = explode('=', $linea, 2);
         $nombre = trim($nombre);
         $valor = trim($valor);
-        
+
         // Quitar comillas si el valor las tiene
         $valor = trim($valor, '"\'');
-        
+
         // Guardar en la superglobal $_ENV
         $_ENV[$nombre] = $valor;
     }
